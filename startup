@@ -1,0 +1,29 @@
+import subprocess
+import schedule
+import time
+
+def open_zoom_and_start_meeting():
+    try:
+        subprocess.run(["zoom"])  # Open Zoom app
+        # You may need to add a delay here to ensure Zoom opens before modifying settings
+        time.sleep(5)  # Wait for 5 seconds (adjust as needed)
+
+        # Turn off microphone using pyautogui (ensure pyautogui is installed)
+        import pyautogui
+        # Find the coordinates of the microphone button on the Zoom app window
+        # and click it to turn off the microphone
+        microphone_button_coordinates = pyautogui.locateCenterOnScreen('microphone_button.png')
+        pyautogui.click(microphone_button_coordinates)
+
+        # Start the meeting with your meeting URL
+        subprocess.run(["zoom", "--url", "YOUR_MEETING_URL"])
+    except FileNotFoundError:
+        print("Zoom app doesn't exist on your system")
+
+# Schedule the task
+schedule.every().day.at("07:00").do(open_zoom_and_start_meeting)
+
+# Keep the script running
+while True:
+    schedule.run_pending()
+    time.sleep(1)
